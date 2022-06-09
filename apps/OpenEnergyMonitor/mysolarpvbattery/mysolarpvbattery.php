@@ -42,6 +42,16 @@
     padding: 10px;
 }
 
+.statsbox-padded-lr {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.statsbox-padded-tb {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
 .statsbox-inner-arrow {
     color: #999;
 }
@@ -149,6 +159,8 @@
 @media (max-width: 576px) {
   #statsbox-generation { padding-bottom:18px; }
   .statsbox-padded { padding: 4px; }
+  .statsbox-padded-lr { padding-left: 4px; padding-right: 4px; }
+  .statsbox-padded-tb { padding-top: 4px; padding-botton: 4px;}
   .statsbox-title { font-size: 14px; padding-bottom: 5px; } /* 20px */
   .statsbox-value { font-size:28px; } /* 36px */
   .statsbox-units { font-size:14px; } /* 16px */
@@ -180,32 +192,32 @@
 <section id="app-block" style="display:none" class="block">
     <div class="d-flex justify-content-between">
         <div class="text-xs-center">
-            <h5 class="electric-title mb-0 text-md-larger text-light"><?php echo _('USE') ?></h5>
-            <h2 class="power-value display-md-3 display-lg-2 my-0 text-primary"><span class="usenow"></span><span class="power-unit"></span></h2>
+            <h5 class="electric-title mb-0 text-sm-larger text-md-larger text-light"><?php echo _('USE') ?></h5>
+            <h2 class="power-value display-sm-4 display-md-3 display-lg-2 my-0 text-primary"><span class="usenow"></span><span class="power-unit"></span></h2>
         </div>
         <div class="text-xs-center">
-            <h5 class="electric-title mb-0 text-md-larger text-light"><span class="balance-label">-</h5>
-            <h2 class="power-value display-md-3 display-lg-2 my-0 text-success ">
+            <h5 class="electric-title mb-0 text-sm-larger text-md-larger text-light"><span class="balance-label">-</h5>
+            <h2 class="power-value display-sm-4 display-md-3 display-lg-2 my-0 text-success ">
                 <span class="balance"></span>
             </h2>
         </div>
         <div class="text-xs-center">
-            <h5 class="electric-title mb-0 text-md-larger text-light"><?php echo _('SOLAR') ?></h5>
-            <h2 class="power-value display-md-3 display-lg-2 my-0 text-warning "><span class="generationnow"></span><span class="power-unit"></span></h2>
+            <h5 class="electric-title mb-0 text-sm-larger text-md-larger text-light"><?php echo _('SOLAR') ?></h5>
+            <h2 class="power-value display-sm-4 display-md-3 display-lg-2 my-0 text-warning "><span class="generationnow"></span><span class="power-unit"></span></h2>
         </div>
     </div>
     <div class="d-flex justify-content-between">
         <div class="text-xs-center">
-            <h5 class="electric-title mb-0 text-md-larger text-light"><span class="battery_charge_discharge_title"><?php echo _('BATTERY POWER') ?></span></h5>
-            <h2 class="power-value display-md-3 display-lg-2 my-0 text-quaternary"><span class="battery_charge_discharge">-</span><span class="power-unit"></span></h2>
+            <h5 class="electric-title mb-0 text-sm-larger text-md-larger text-light"><span class="battery_charge_discharge_title"><?php echo _('BATTERY POWER') ?></span></h5>
+            <h2 class="power-value display-sm-4 display-md-3 display-lg-2 my-0 text-quaternary"><span class="battery_charge_discharge">-</span><span class="power-unit"></span></h2>
         </div>
         <div class="text-xs-center">
-            <h5 class="electric-title mb-0 text-md-larger text-light"><span class="discharge_time_left_title"><?php echo _('BATTERY TIME LEFT') ?></span></h5>
-            <h2 class="power-value display-md-3 display-lg-2 my-0 text-quaternary"><span class="discharge_time_left">-</span></h2>
+            <h5 class="electric-title mb-0 text-sm-larger text-md-larger text-light"><span class="discharge_time_left_title"><?php echo _('BAT. TIME LEFT') ?></span></h5>
+            <h2 class="power-value display-sm-4 display-md-3 display-lg-2 my-0 text-quaternary"><span class="discharge_time_left">-</span></h2>
         </div>
         <div class="text-xs-center">
-            <h5 class="electric-title mb-0 text-md-larger text-light"><?php echo _('STATE OF CHARGE') ?></h5>
-            <h2 class="power-value display-md-3 display-lg-2 my-0 text-quaternary"><span class="battery_soc">-</span>%</h2>
+            <h5 class="electric-title mb-0 text-sm-larger text-md-larger text-light"><?php echo _('BAT. CHARGE') ?></h5>
+            <h2 class="power-value display-sm-4 display-md-3 display-lg-2 my-0 text-quaternary"><span class="battery_soc">-</span>%</h2>
         </div>
     </div>
 
@@ -241,7 +253,7 @@
             
             <td class="statsbox">
                 <div class="statsbox-inner-arrow">
-                    <div class="statsbox-padded statsbox-arrow-right"><span class="statsbox-value total_solar_export_kwh">0</span> <span class="statsbox-units">kWh</span></div>
+                    <div class="statsbox-padded-lr statsbox-arrow-right"><span class="statsbox-value total_solar_export_kwh">0</span> <span class="statsbox-units">kWh</span></div>
                 </div>
             </td>
 
@@ -256,7 +268,7 @@
         <tr>
             <td class="statsbox">
                 <div class="statsbox-inner-arrow">
-                    <div class="statsbox-padded statsbox-arrow-down"><span class="statsbox-value total_battery_charge_from_solar_kwh">0</span> <span class="statsbox-units">kWh</span></div>
+                    <div class="statsbox-padded-tb statsbox-arrow-down"><span class="statsbox-value total_battery_charge_from_solar_kwh">0</span> <span class="statsbox-units">kWh</span></div>
                 </div>
             </td>
 
@@ -268,7 +280,7 @@
             
             <td class="statsbox">
                 <div class="statsbox-inner-arrow">
-                    <div class="statsbox-padded statsbox-arrow-down"><span class="statsbox-value total_solar_direct_kwh">0</span> <span class="statsbox-units">kWh</span></div>
+                    <div class="statsbox-padded-tb statsbox-arrow-down"><span class="statsbox-value total_solar_direct_kwh">0</span> <span class="statsbox-units">kWh</span></div>
                 </div>
             </td>
 
@@ -277,7 +289,7 @@
             
             <td class="statsbox">
                 <div class="statsbox-inner-arrow">
-                    <div class="statsbox-padded statsbox-arrow-down"><span class="statsbox-value total_import_direct_kwh">0</span> <span class="statsbox-units">kWh</span></div>
+                    <div class="statsbox-padded-tb statsbox-arrow-down"><span class="statsbox-value total_import_direct_kwh">0</span> <span class="statsbox-units">kWh</span></div>
                 </div>
             </td>
         </tr>
@@ -292,7 +304,7 @@
 
             <td class="statsbox discharge-box">
                 <div class="statsbox-inner-arrow">
-                    <div class="statsbox-padded statsbox-arrow-right"><span class="statsbox-value total_battery_discharge_kwh">0</span> <span class="statsbox-units">kWh</span></div>
+                    <div class="statsbox-padded-lr statsbox-arrow-right"><span class="statsbox-value total_battery_discharge_kwh">0</span> <span class="statsbox-units">kWh</span></div>
                 </div>
             </td>
 
@@ -621,24 +633,27 @@ function livefn()
 
     const net_battery_charge = battery_charge_now - battery_discharge_now;
     if (net_battery_charge>0) {
-        $(".battery_charge_discharge_title").html("BATTERY CHARGING");
+        $(".battery_charge_discharge_title").html("CHARGING");
         $(".battery_charge_discharge").html(net_battery_charge);
         $(".discharge_time_left").html("--");
     } else if (net_battery_charge<0) {
         if (config.app && config.app.kw && config.app.battery_capacity_kwh.value > 0 && battery_soc_now >= 0) {
             const total_capacity = config.app.battery_capacity_kwh.value * 1000;
-            const energy_remaining = total_capacity * battery_soc_now / 100;
+            const energy_remaining = total_capacity * (battery_soc_now-10) / 100;
             const total_time_left_mins = (energy_remaining / -(net_battery_charge)) * 60;
 
             const hours_left = Math.floor(total_time_left_mins / 60);
             const mins_left = Math.floor(total_time_left_mins % 60);
-            const battery_time_left_text = `${hours_left}h ${mins_left}m`
+            var battery_time_left_text = `${hours_left}h ${mins_left}m`;
+            if (hours_left > 9){
+                battery_time_left_text = `${hours_left}h`;
+            }
             $(".discharge_time_left").html(battery_time_left_text);
         } else {
             $(".discharge_time_left").html("--");
         }
 
-        $(".battery_charge_discharge_title").html("BATTERY DISCHARGING");
+        $(".battery_charge_discharge_title").html("DISCHARGING");
         $(".battery_charge_discharge").html(-net_battery_charge);
     } else {
         $(".battery_charge_discharge_title").html("BATTERY POWER");
