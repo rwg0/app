@@ -639,7 +639,7 @@ function livefn()
     } else if (net_battery_charge<0) {
         if (config.app && config.app.kw && config.app.battery_capacity_kwh.value > 0 && battery_soc_now >= 0) {
             const total_capacity = config.app.battery_capacity_kwh.value * 1000;
-            const energy_remaining = total_capacity * (battery_soc_now-10) / 100;
+            const energy_remaining = total_capacity * (battery_soc_now) / 100;
             const total_time_left_mins = (energy_remaining / -(net_battery_charge)) * 60;
 
             const hours_left = Math.floor(total_time_left_mins / 60);
