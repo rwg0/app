@@ -155,6 +155,10 @@
   font-size:10px;
 }
 
+.flot-tick-label {
+    color: #ccc;
+}
+
 /*Small devices (landscape phones, 576px and up)*/
 @media (max-width: 576px) {
   #statsbox-generation { padding-bottom:18px; }
@@ -234,7 +238,7 @@
             <td class="statsbox" colspan="3" style="background: #dccc1f">
                 <div class="statsbox-inner-unit">
                     <div id="statsbox-generation" class="statsbox-padded" style="position: relative;">
-                        <div class="statsbox-title"><span class="generationtitle">SOLAR</span></div>
+                        <div class="statsbox-title"><span class="generationtitle">SOLAR TODAY</span></div>
                         <div><span class="statsbox-value total_solar_kwh">0</span> <span class="statsbox-units">kWh</span></div>
                         <div style="position: absolute; width: 50%; left: 0%; bottom: 0%">
                             <span class="statsbox-prc solar_to_battery_prc">0</span>
@@ -313,7 +317,7 @@
             <td class="statsbox" colspan="3" style="background: #82cbfc">
                 <div class="statsbox-inner-unit">
                     <div class="statsbox-padded" style="position: relative;">
-                        <div class="statsbox-title">HOUSE</div>
+                        <div class="statsbox-title">USAGE TODAY</div>
                         <div><span class="statsbox-value total_use_kwh">0</span> <span class="statsbox-units">kWh</span></div>
                         <div style="position: absolute; width: 0%; left: 3px; top: 40%">
                             <div><span class="statsbox-prc use_from_battery_prc">0</span></div>
@@ -436,9 +440,15 @@ var timeWindow = (3600000*24.0*30);
 var history_end = +new Date;
 var history_start = history_end - timeWindow;
 
-timeWindow = (3600000*6.0*1);
-var power_end = +new Date;
-var power_start = power_end - timeWindow;
+//timeWindow = (3600000*6.0*1);
+var nextmidnight = new Date();
+nextmidnight.setHours(24,0,0,0);
+var power_end = +nextmidnight;
+//var power_start = power_end - timeWindow;
+var midnight = new Date();
+midnight.setHours(0,0,0,0);
+var power_start = +midnight;
+timewindow = power_end - power_start;
 
 var live_timerange = timeWindow;
 
@@ -531,7 +541,7 @@ function resize()
 
     var is_landscape = $(window).height() < $(window).width();
     var width = placeholder_bound.width();
-    var height = $(window).height()*(is_landscape ? 0.3: 0.3);
+    var height = $(window).height()*(is_landscape ? 0.4: 0.4);
 
     if (height>width) height = width;
     if (height<180) height = 180;
@@ -570,25 +580,32 @@ function livefn()
     }
     
     if (autoupdate) {
+        
         var updatetime = feeds[config.app.solar.value].time;
         timeseries.append("solar",updatetime,solar_now);
-        timeseries.trim_start("solar",view.start*0.001);
+     //   timeseries.trim_start("solar",view.start*0.001);
         timeseries.append("use",updatetime,use_now);
-        timeseries.trim_start("use",view.start*0.001);
+     //   timeseries.trim_start("use",view.start*0.001);
         
         timeseries.append("battery_charge",updatetime,battery_charge_now);
-        timeseries.trim_start("battery_charge",view.start*0.001);
+     //   timeseries.trim_start("battery_charge",view.start*0.001);
         timeseries.append("battery_discharge",updatetime,battery_discharge_now);
-        timeseries.trim_start("battery_discharge",view.start*0.001);
+     //   timeseries.trim_start("battery_discharge",view.start*0.001);
         
         if (config.app.battery_soc.value) {
             timeseries.append("battery_soc",updatetime,battery_soc_now);
-            timeseries.trim_start("battery_soc",view.start*0.001);
+     //       timeseries.trim_start("battery_soc",view.start*0.001);
         }
        
         // Advance view
-        view.end = now;
-        view.start = now - live_timerange;
+        //view.end = now;
+     //   view.start = now - live_timerange;
+
+        if (now - view.start > 86410 * 1000){
+            location.reload();
+
+        }
+
     }
     // Lower limit for solar & battery charge/discharge
     if (solar_now<10) solar_now = 0;
@@ -687,13 +704,14 @@ function load_powergraph() {
     // -------------------------------------------------------------------------------------------------------
     if (reload) {
         reload = false;
-        timeseries.load("solar",feed.getdata(config.app.solar.value,view.start,view.end,view.interval));
-        timeseries.load("use",feed.getdata(config.app.use.value,view.start,view.end,view.interval));
-        timeseries.load("battery_charge",feed.getdata(config.app.battery_charge.value,view.start,view.end,view.interval));
-        timeseries.load("battery_discharge",feed.getdata(config.app.battery_discharge.value,view.start,view.end,view.interval));
+        var endt = Math.min(view.end, +new Date);
+        timeseries.load("solar",feed.getdata(config.app.solar.value,view.start,endt,view.interval));
+        timeseries.load("use",feed.getdata(config.app.use.value,view.start,endt,view.interval));
+        timeseries.load("battery_charge",feed.getdata(config.app.battery_charge.value,view.start,endt,view.interval));
+        timeseries.load("battery_discharge",feed.getdata(config.app.battery_discharge.value,view.start,endt,view.interval));
         
         if (config.app.battery_soc.value) {
-            timeseries.load("battery_soc",feed.getdata(config.app.battery_soc.value,view.start,view.end,view.interval));
+            timeseries.load("battery_soc",feed.getdata(config.app.battery_soc.value,view.start,endt,view.interval));
         }
     }
     // -------------------------------------------------------------------------------------------------------
@@ -858,16 +876,32 @@ function load_powergraph() {
 
 function draw_powergraph() {
 
+    var timeticks = [];
+    for (i = 0; i <= 24; i+=2) {
+        var label = ("0" + i).slice(-2)+":00";
+        var timept = view.start + i * 3600*1000;
+        timeticks.push([timept, label ]);
+    }
+
+    var ymax = Math.max(1000, maxpowergraph);
+    var powerticks = [];
+    for (i=0; i<=ymax; i+= 1000 )
+    {
+        var label = (i/1000) + "kW";
+        powerticks.push([i, label]);
+    }
+
     var options = {
         lines: { fill: false },
-        xaxis: { mode: "time", timezone: "browser", min: view.start, max: view.end},
-        yaxes: [{ min: 0, max: maxpowergraph },{ min: 0, max: 100, show:false }],
+        xaxis: { mode: "time", timezone: "browser", min: view.start, max: view.end, ticks: timeticks},
+        yaxes: [{ min: 0, max: ymax, ticks: powerticks },{ min: 0, max: 100, show:false }],
         grid: { hoverable: true, clickable: true },
         selection: { mode: "x" },
         legend: { show: false }
     }
     
     options.xaxis.min = view.start;
+
     options.xaxis.max = view.end;
     $.plot($('#placeholder'),powerseries,options);
     $(".ajax-loader").hide();
