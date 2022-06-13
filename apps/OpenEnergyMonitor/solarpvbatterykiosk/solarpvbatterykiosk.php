@@ -866,10 +866,10 @@ function load_powergraph() {
 
     powerseries = [];
     
-    powerseries.push({data:solar_data, label: "Solar", color: "#dccc1f", stack:1, lines:{lineWidth:0, fill:1.0}});
-    powerseries.push({data:use_data, label: "House", color: "#82cbfc", stack:2, lines:{lineWidth:0, fill:0.8}});
+    powerseries.push({data:solar_data, label: "Solar", color: "#FFFF0A", stack:1, lines:{lineWidth:0, fill:1.0}});
+    powerseries.push({data:use_data, label: "Usage", color: "#0699FA", stack:2, lines:{lineWidth:0, fill:0.5}});
     powerseries.push({data:battery_charge_data, label: "Charge", color: "#fb7b50", stack:2, lines:{lineWidth:0, fill:0.8}});
-    powerseries.push({data:battery_discharge_data, label: "Discharge", color: "#fbb450", stack:1, lines:{lineWidth:0, fill:0.8}});
+    powerseries.push({data:battery_discharge_data, label: "Discharge", color: "#D65428", stack:1, lines:{lineWidth:0, fill:1.0}});
     
     if (show_battery_soc && config.app.battery_soc.value) powerseries.push({data:battery_soc_data, label: "SOC", yaxis:2, color: "#888"});
 }
