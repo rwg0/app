@@ -115,6 +115,46 @@
   margin-top: -16px;
 }
 
+.statsbox-import{
+    color : #42ADEF;
+}
+
+.statsbox-import::after{
+    border-top-color: #42ADEF;
+}
+
+.statsbox-export{
+    color : #FFFF0A;
+}
+
+.statsbox-export::after{
+    border-left-color: #FFFF0A;
+}
+
+.statsbox-solaruse{
+    color : #82CC82;
+}
+
+.statsbox-solaruse::after{
+    border-top-color: #82CC82;
+}
+
+.statsbox-charge{
+    color : #FC9542;
+}
+
+.statsbox-charge::after{
+    border-top-color: #FC9542;
+}
+
+.statsbox-discharge{
+    color : #D65428;
+}
+
+.statsbox-discharge::after{
+    border-left-color: #D65428;
+}
+
 .statsbox-arrow-left {
     position: relative;
     margin-left: 16px;
@@ -258,8 +298,8 @@
             </td>
             
             <td class="statsbox">
-                <div class="statsbox-inner-arrow">
-                    <div class="statsbox-padded-lr statsbox-arrow-right"><span class="statsbox-value total_solar_export_kwh">0</span> <span class="statsbox-units">kWh</span></div>
+                <div class="statsbox-inner-arrow statsbox-export" >
+                    <div class="statsbox-padded-lr statsbox-arrow-right statsbox-export"><span class="statsbox-value total_solar_export_kwh">0</span> <span class="statsbox-units">kWh</span></div>
                 </div>
             </td>
 
@@ -273,20 +313,20 @@
         
         <tr>
             <td class="statsbox">
-                <div class="statsbox-inner-arrow">
-                    <div class="statsbox-padded-tb statsbox-arrow-down"><span class="statsbox-value total_battery_charge_from_solar_kwh">0</span> <span class="statsbox-units">kWh</span></div>
+                <div class="statsbox-inner-arrow statsbox-charge" >
+                    <div class="statsbox-padded-tb statsbox-arrow-down statsbox-charge"><span class="statsbox-value total_battery_charge_from_solar_kwh">0</span> <span class="statsbox-units">kWh</span></div>
                 </div>
             </td>
 
             <td class="statsbox" style="text-align:left">
                 <div id="battery_import" class="statsbox-inner-arrow">
-                    <div class="statsbox-padded statsbox-arrow-left" style="padding:10px 0px 0px 10px"><span style="">GRID CHARGE</span><br><span class="statsbox-value total_import_for_battery_kwh" style="font-size:22px">0</span> <span class="statsbox-units">kWh</span></div>
+                    <div class="statsbox-padded statsbox-arrow-left" style="padding:10px 0px 0px 10px"><span>GRID CHARGE</span><br><span class="statsbox-value total_import_for_battery_kwh" style="font-size:22px">0</span> <span class="statsbox-units">kWh</span></div>
                 </div>
             </td>
             
-            <td class="statsbox">
-                <div class="statsbox-inner-arrow">
-                    <div class="statsbox-padded-tb statsbox-arrow-down"><span class="statsbox-value total_solar_direct_kwh">0</span> <span class="statsbox-units">kWh</span></div>
+            <td class="statsbox" >
+                <div class="statsbox-inner-arrow statsbox-solaruse">
+                    <div class="statsbox-padded-tb statsbox-arrow-down statsbox-solaruse" ><span class="statsbox-value total_solar_direct_kwh">0</span> <span class="statsbox-units">kWh</span></div>
                 </div>
             </td>
 
@@ -294,8 +334,8 @@
             </td>
             
             <td class="statsbox">
-                <div class="statsbox-inner-arrow">
-                    <div class="statsbox-padded-tb statsbox-arrow-down"><span class="statsbox-value total_import_direct_kwh">0</span> <span class="statsbox-units">kWh</span></div>
+                <div class="statsbox-inner-arrow statsbox-import" >
+                    <div class="statsbox-padded-tb statsbox-arrow-down statsbox-import"><span class="statsbox-value total_import_direct_kwh">0</span> <span class="statsbox-units">kWh</span></div>
                 </div>
             </td>
         </tr>
@@ -309,8 +349,8 @@
             </td>
 
             <td class="statsbox discharge-box">
-                <div class="statsbox-inner-arrow">
-                    <div class="statsbox-padded-lr statsbox-arrow-right"><span class="statsbox-value total_battery_discharge_kwh">0</span> <span class="statsbox-units">kWh</span></div>
+                <div class="statsbox-inner-arrow statsbox-discharge" >
+                    <div class="statsbox-padded-lr statsbox-arrow-right statsbox-discharge" ><span class="statsbox-value total_battery_discharge_kwh">0</span> <span class="statsbox-units">kWh</span></div>
                 </div>
             </td>
 
