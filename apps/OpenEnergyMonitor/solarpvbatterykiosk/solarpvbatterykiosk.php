@@ -641,7 +641,7 @@ function livefn()
         //view.end = now;
      //   view.start = now - live_timerange;
 
-        if (now - view.start > 86410 * 1000){
+        if (now - view.start > 86460 * 1000){
             location.reload();
 
         }
@@ -867,8 +867,8 @@ function load_powergraph() {
     var total_solar_export_kwh = total_solar_kwh - total_solar_direct_kwh - total_battery_charge_from_solar_kwh;
     var total_grid_balance_kwh = total_import_kwh - total_solar_export_kwh;
     
-    $(".total_solar_kwh").html(total_solar_kwh.toFixed(1));
-    $(".total_use_kwh").html(total_use_kwh.toFixed(1));
+    $(".total_solar_kwh").html(total_solar_kwh.toFixed(3));
+    $(".total_use_kwh").html(total_use_kwh.toFixed(3));
     $(".total_import_direct_kwh").html(total_import_direct_kwh.toFixed(1));
     $(".total_grid_balance_kwh").html(total_grid_balance_kwh.toFixed(1));
     if (total_solar_kwh) {
