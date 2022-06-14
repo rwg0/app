@@ -204,7 +204,7 @@
   #statsbox-generation { padding-bottom:18px; }
   .statsbox-padded { padding: 4px; }
   .statsbox-padded-lr { padding-left: 4px; padding-right: 4px; }
-  .statsbox-padded-tb { padding-top: 4px; padding-botton: 4px;}
+  .statsbox-padded-tb { padding-top: 4px; padding-bottom: 4px;}
   .statsbox-title { font-size: 14px; padding-bottom: 5px; } /* 20px */
   .statsbox-value { font-size:28px; } /* 36px */
   .statsbox-units { font-size:14px; } /* 16px */
