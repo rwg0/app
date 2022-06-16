@@ -610,7 +610,7 @@ function resize()
 
     var is_landscape = $(window).height() < $(window).width();
     var width = placeholder_bound.width();
-    var height = $(window).height()*(is_landscape ? 0.45: 0.45);
+    var height = $(window).height()*(is_landscape ? 0.35: 0.45);
 
     if (height>width) height = width;
     if (height<180) height = 180;
@@ -751,7 +751,7 @@ function livefn()
 
             const hours_left = Math.floor(total_time_left_mins / 60);
             const mins_left = Math.floor(total_time_left_mins % 60);
-            var battery_time_left_text = `${hours_left}h ${mins_left}m`;
+            var battery_time_left_text = `${hours_left}h ${mins_left}`;
             if (hours_left > 9){
                 battery_time_left_text = `${hours_left}h`;
             }
