@@ -27,6 +27,15 @@
     border-collapse: separate;
 }
 
+.dispvalue {
+    font-size:130%;
+}
+
+.power-unit-style {
+    font-size: 33%;
+    color: #aaa;
+}
+
 .statsbox {
     width: 20%;
     text-align: center;
@@ -221,7 +230,7 @@
 
 </style>
 
-<?php if (!$_GET['kioskmode']) {?>
+<?php if (!isset($_GET['kioskmode'])) {?>
 <nav id="buttons" class="d-flex justify-content-between">
     <ul id="tabs" class="nav nav-pills mb-0">
         <li><button class="viewhistory btn btn-large btn-link btn-inverse" title="<?php echo _('View History') ?>">
@@ -234,37 +243,50 @@
 <?php }?>
 
 <section id="app-block" style="display:none" class="block">
-    <div class="d-flex justify-content-between">
+<table style="width: 100%;">
+    <tr>
+        <td style="width: 33%;">
         <div class="text-xs-center">
             <h5 class="electric-title mb-0 text-sm-larger text-md-larger text-light"><?php echo _('USE') ?></h5>
-            <h2 class="power-value display-sm-4 display-md-3 display-lg-2 my-0 text-primary"><span class="usenow"></span><span class="power-unit"></span></h2>
+            <h2 class="power-value display-sm-4 display-md-3 display-lg-2 my-0 text-primary"><span class="usenow dispvalue"></span><span class="power-unit power-unit-style"></span></h2>
         </div>
+        </td>
+        <td style="width: 33%;">
         <div class="text-xs-center">
             <h5 class="electric-title mb-0 text-sm-larger text-md-larger text-light"><span class="balance-label">-</h5>
             <h2 class="power-value display-sm-4 display-md-3 display-lg-2 my-0 text-success ">
-                <span class="balance"></span>
+                <span class="balance dispvalue"></span><span  class="balance-unit  power-unit-style"></span>
             </h2>
         </div>
+        </td>
+        <td style="width: 33%;">
         <div class="text-xs-center">
             <h5 class="electric-title mb-0 text-sm-larger text-md-larger text-light"><?php echo _('SOLAR') ?></h5>
-            <h2 class="power-value display-sm-4 display-md-3 display-lg-2 my-0 text-warning "><span class="generationnow"></span><span class="power-unit"></span></h2>
+            <h2 class="power-value display-sm-4 display-md-3 display-lg-2 my-0 text-warning "><span class="generationnow dispvalue"></span><span class="power-unit power-unit-style"></span></h2>
         </div>
-    </div>
-    <div class="d-flex justify-content-between">
+        </td>
+</tr>
+<tr>
+    <td>
         <div class="text-xs-center">
-            <h5 class="electric-title mb-0 text-sm-larger text-md-larger text-light"><span class="battery_charge_discharge_title"><?php echo _('BATTERY POWER') ?></span></h5>
-            <h2 class="power-value display-sm-4 display-md-3 display-lg-2 my-0 text-quaternary"><span class="battery_charge_discharge">-</span><span class="power-unit"></span></h2>
+            <h5 class="electric-title mb-0 text-sm-larger text-md-larger text-light"><span class="battery_charge_discharge_title"><?php echo _('BATTERY') ?></span></h5>
+            <h2 class="power-value display-sm-4 display-md-3 display-lg-2 my-0 text-quaternary"><span class="battery_charge_discharge dispvalue">-</span><span class="power-unit power-unit-style"></span></h2>
         </div>
+</td>
+<td>
         <div class="text-xs-center">
-            <h5 class="electric-title mb-0 text-sm-larger text-md-larger text-light"><span class="discharge_time_left_title"><?php echo _('BAT. TIME LEFT') ?></span></h5>
-            <h2 class="power-value display-sm-4 display-md-3 display-lg-2 my-0 text-quaternary"><span class="discharge_time_left">-</span></h2>
+            <h5 class="electric-title mb-0 text-sm-larger text-md-larger text-light"><span class="discharge_time_left_title"><?php echo _('TIME LEFT') ?></span></h5>
+            <h2 class="power-value display-sm-4 display-md-3 display-lg-2 my-0 text-quaternary"><span class="discharge_time_left dispvalue">-</span></h2>
         </div>
+</td>
+<td>
         <div class="text-xs-center">
-            <h5 class="electric-title mb-0 text-sm-larger text-md-larger text-light"><?php echo _('BAT. CHARGE') ?></h5>
-            <h2 class="power-value display-sm-4 display-md-3 display-lg-2 my-0 text-quaternary"><span class="battery_soc">-</span>%</h2>
+            <h5 class="electric-title mb-0 text-sm-larger text-md-larger text-light"><?php echo _('CHARGE') ?></h5>
+            <h2 class="power-value display-sm-4 display-md-3 display-lg-2 my-0 text-quaternary"><span class="battery_soc dispvalue">-</span><span class="power-unit-style">%</span></h2>
         </div>
-    </div>
-
+</td>
+</tr>
+    </table>
     <div style="display:none;">
         <?php include(dirname(__DIR__).'/graph-nav.php'); ?>
     </div>
@@ -280,10 +302,10 @@
                     <div id="statsbox-generation" class="statsbox-padded" style="position: relative;">
                         <div class="statsbox-title"><span class="generationtitle">SOLAR TODAY</span></div>
                         <div><span class="statsbox-value total_solar_kwh">0</span> <span class="statsbox-units">kWh</span></div>
-                        <div style="position: absolute; width: 50%; left: 0%; bottom: 0%">
+                        <div style="position: absolute; width: 30%; left: 0%; bottom: 0%">
                             <span class="statsbox-prc solar_to_battery_prc">0</span>
                         </div>
-                        <div style="position: absolute; width: 50%; left: 50%; bottom: 0%">
+                        <div style="position: absolute; width: 30%; left: 70%; bottom: 0%">
                             <span class="statsbox-prc solar_direct_prc">0</span>
                         </div>
                         <div style="position: absolute; height: 100%; right: 0%; top: 0%">
@@ -365,7 +387,7 @@
                         <div style="position: absolute; width: 33.33333%; left: 0%; top: 0%">
                             <div><span class="statsbox-prc use_from_solar_prc">0</span></div>
                         </div>
-                        <div style="position: absolute; width: 33.33333%; left: 66.66667%; top: 0%">
+                        <div style="position: absolute; width: 30%; left: 70%; top: 0%">
                             <div><span class="statsbox-prc use_from_import_prc">0</span></div>
                         </div>
                     </div>
@@ -422,6 +444,13 @@ $("body").css('background-color','#222');
 $(window).ready(function(){
     $("#footer").css('background-color','#181818');
     $("#footer").css('color','#999');
+    if(getUrlParameter('kioskmode')==='1') {
+        $(".menu-top").hide();
+        $(".menu-l3").hide();
+        $(".menu-l2").hide();
+        $(".content-container").css("margin","0px");
+        resize();
+    }
 });
 if (!sessionwrite) $(".openconfig").hide();
 
@@ -581,7 +610,7 @@ function resize()
 
     var is_landscape = $(window).height() < $(window).width();
     var width = placeholder_bound.width();
-    var height = $(window).height()*(is_landscape ? 0.4: 0.4);
+    var height = $(window).height()*(is_landscape ? 0.45: 0.45);
 
     if (height>width) height = width;
     if (height<180) height = 180;
@@ -642,7 +671,20 @@ function livefn()
      //   view.start = now - live_timerange;
 
         if (now - view.start > 86460 * 1000){
-            location.reload();
+            var nextmidnight = new Date();
+            nextmidnight.setHours(24,0,0,0);
+            power_end = +nextmidnight;
+            //var power_start = power_end - timeWindow;
+            var midnight = new Date();
+            midnight.setHours(0,0,0,0);
+            power_start = +midnight;
+            timewindow = power_end - power_start;
+
+            live_timerange = timeWindow;
+            view.start = power_start;
+            view.end = power_end;
+            alert('reload');
+            reload = true;
 
         }
 
@@ -675,16 +717,21 @@ function livefn()
     if (balance==0) {
         $(".balance-label").html("PERFECT BALANCE");
         $(".balance").html("--");
+        $(".balance-unit").html("");
     }
     
     if (balance>0) {
         $(".balance-label").html("EXPORTING");
-        $(".balance").html("<span style='color:#2ed52e'><b>"+Math.round(Math.abs(balance))+powerUnit+"</b></span>");
+        $(".balance").html("<span style='color:#2ed52e'><b>"+Math.round(Math.abs(balance))+"</b></span>");
+        $(".balance-unit").html(powerUnit);
+
     }
     
     if (balance<0) {
         $(".balance-label").html("IMPORTING");
-        $(".balance").html("<span style='color:#d52e2e'><b>"+Math.round(Math.abs(balance))+powerUnit+"</b></span>");
+        $(".balance").html("<span style='color:#d52e2e'><b>"+Math.round(Math.abs(balance))+"</b></span>");
+        $(".balance-unit").html(powerUnit);
+
     }
     
     $(".generationnow").html(gen_now);
@@ -693,7 +740,7 @@ function livefn()
 
     const net_battery_charge = battery_charge_now - battery_discharge_now;
     if (net_battery_charge>0) {
-        $(".battery_charge_discharge_title").html("CHARGING");
+        $(".battery_charge_discharge_title").html("<span style='color:#2ed52e;'>CHARGING</span>");
         $(".battery_charge_discharge").html(net_battery_charge);
         $(".discharge_time_left").html("--");
     } else if (net_battery_charge<0) {
@@ -713,10 +760,10 @@ function livefn()
             $(".discharge_time_left").html("--");
         }
 
-        $(".battery_charge_discharge_title").html("DISCHARGING");
+        $(".battery_charge_discharge_title").html("<span style='color:#d52e2e'>DISCHARGING</span>");
         $(".battery_charge_discharge").html(-net_battery_charge);
     } else {
-        $(".battery_charge_discharge_title").html("BATTERY POWER");
+        $(".battery_charge_discharge_title").html("BATTERY");
         $(".battery_charge_discharge").html(0);
         $(".discharge_time_left").html("--");
     }
@@ -1309,4 +1356,20 @@ function app_log (level, message) {
     if (level=="ERROR") alert(level+": "+message);
     console.log(level+": "+message);
 }
+
+var getUrlParameter = function getUrlParameter(sParam) {
+    var sPageURL = window.location.search.substring(1),
+        sURLVariables = sPageURL.split('&'),
+        sParameterName,
+        i;
+
+    for (i = 0; i < sURLVariables.length; i++) {
+        sParameterName = sURLVariables[i].split('=');
+
+        if (sParameterName[0] === sParam) {
+            return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+        }
+    }
+    return false;
+};
 </script>
