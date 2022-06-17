@@ -683,7 +683,6 @@ function livefn()
             live_timerange = timeWindow;
             view.start = power_start;
             view.end = power_end;
-            alert('reload');
             reload = true;
 
         }
@@ -715,7 +714,7 @@ function livefn()
     }
 
     if (balance==0) {
-        $(".balance-label").html("PERFECT BALANCE");
+        $(".balance-label").html("NO FLOW");
         $(".balance").html("--");
         $(".balance-unit").html("");
     }
@@ -949,7 +948,6 @@ function load_powergraph() {
     
     peak.sort((a, b) => a - b);
     maxpowergraph = peak[Math.floor(peak.length*99/100)];
-    //alert(centile);
 
     powerseries = [];
     
