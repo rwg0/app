@@ -636,139 +636,140 @@ function livefn()
     lastupdate = now;
     var powerUnit = config.app && config.app.kw && config.app.kw.value===true ? 'kW' : 'W';
 
-    var feeds = feed.listbyid();
-    if (feeds === null) { return; }
-    var solar_now = parseInt(feeds[config.app.solar.value].value);
-    var use_now = parseInt(feeds[config.app.use.value].value);
-    var battery_charge_now = parseInt(feeds[config.app.battery_charge.value].value);
-    var battery_discharge_now = parseInt(feeds[config.app.battery_discharge.value].value);
-    
-    var battery_soc_now = "---";
-    if (config.app.battery_soc.value) {
-        battery_soc_now = parseInt(feeds[config.app.battery_soc.value].value);
-    }
-    
-    if (autoupdate) {
+    feed.listbyidasync(function(feeds) {
+        if (feeds === null) { return; }
+        var solar_now = parseInt(feeds[config.app.solar.value].value);
+        var use_now = parseInt(feeds[config.app.use.value].value);
+        var battery_charge_now = parseInt(feeds[config.app.battery_charge.value].value);
+        var battery_discharge_now = parseInt(feeds[config.app.battery_discharge.value].value);
         
-        var updatetime = feeds[config.app.solar.value].time;
-        timeseries.append("solar",updatetime,solar_now);
-     //   timeseries.trim_start("solar",view.start*0.001);
-        timeseries.append("use",updatetime,use_now);
-     //   timeseries.trim_start("use",view.start*0.001);
-        
-        timeseries.append("battery_charge",updatetime,battery_charge_now);
-     //   timeseries.trim_start("battery_charge",view.start*0.001);
-        timeseries.append("battery_discharge",updatetime,battery_discharge_now);
-     //   timeseries.trim_start("battery_discharge",view.start*0.001);
-        
+        var battery_soc_now = "---";
         if (config.app.battery_soc.value) {
-            timeseries.append("battery_soc",updatetime,battery_soc_now);
-     //       timeseries.trim_start("battery_soc",view.start*0.001);
+            battery_soc_now = parseInt(feeds[config.app.battery_soc.value].value);
         }
-       
-        // Advance view
-        //view.end = now;
-     //   view.start = now - live_timerange;
-
-        if (now - view.start > 86460 * 1000){
-            var nextmidnight = new Date();
-            nextmidnight.setHours(24,0,0,0);
-            power_end = +nextmidnight;
-            //var power_start = power_end - timeWindow;
-            var midnight = new Date();
-            midnight.setHours(0,0,0,0);
-            power_start = +midnight;
-            timewindow = power_end - power_start;
-
-            live_timerange = timeWindow;
-            view.start = power_start;
-            view.end = power_end;
-            reload = true;
-
-        }
-
-    }
-    // Lower limit for solar & battery charge/discharge
-    if (solar_now<10) solar_now = 0;
-    if (battery_charge_now<10) battery_charge_now = 0;
-    if (battery_discharge_now<10) battery_discharge_now = 0;
-    
-    var balance = solar_now - use_now - battery_charge_now + battery_discharge_now;
-    
-    // convert W to kW
-    if(powerUnit === 'kW') {
-        gen_now = as_kw(solar_now)
-        solar_now = as_kw(solar_now)
-        use_now = as_kw(use_now)
-        balance = as_kw(balance)
-        battery_charge_now = as_kw(battery_charge_now)
-        battery_discharge_now = as_kw(battery_discharge_now)
-        $('.power-unit').text('kW')
-        $('#app-block').addClass('in_kw');
-    } else {
-        solar_now = Math.round(solar_now)
-        gen_now = solar_now
-        balance = Math.round(balance)
-        $('.power-unit').text('W')
-        $('#app-block').removeClass('in_kw');
-    }
-
-    if (balance==0) {
-        $(".balance-label").html("NO FLOW");
-        $(".balance").html("--");
-        $(".balance-unit").html("");
-    }
-    
-    if (balance>0) {
-        $(".balance-label").html("EXPORTING");
-        $(".balance").html("<span style='color:#2ed52e'><b>"+Math.round(Math.abs(balance))+"</b></span>");
-        $(".balance-unit").html(powerUnit);
-
-    }
-    
-    if (balance<0) {
-        $(".balance-label").html("IMPORTING");
-        $(".balance").html("<span style='color:#d52e2e'><b>"+Math.round(Math.abs(balance))+"</b></span>");
-        $(".balance-unit").html(powerUnit);
-
-    }
-    
-    $(".generationnow").html(gen_now);
-    $(".usenow").html(use_now);
-    $(".battery_soc").html(battery_soc_now);
-
-    const net_battery_charge = battery_charge_now - battery_discharge_now;
-    if (net_battery_charge>0) {
-        $(".battery_charge_discharge_title").html("<span style='color:#2ed52e;'>CHARGING</span>");
-        $(".battery_charge_discharge").html(net_battery_charge);
-        $(".discharge_time_left").html("--");
-    } else if (net_battery_charge<0) {
-        if (config.app && config.app.kw && config.app.battery_capacity_kwh.value > 0 && battery_soc_now >= 0) {
-            const total_capacity = config.app.battery_capacity_kwh.value * 1000;
-            const energy_remaining = total_capacity * (battery_soc_now) / 100;
-            const total_time_left_mins = (energy_remaining / -(net_battery_charge)) * 60;
-
-            const hours_left = Math.floor(total_time_left_mins / 60);
-            const mins_left = Math.floor(total_time_left_mins % 60);
-            var battery_time_left_text = `${hours_left}h ${mins_left}`;
-            if (hours_left > 9){
-                battery_time_left_text = `${hours_left}h`;
+        
+        if (autoupdate) {
+            
+            var updatetime = feeds[config.app.solar.value].time;
+            timeseries.append("solar",updatetime,solar_now);
+        //   timeseries.trim_start("solar",view.start*0.001);
+            timeseries.append("use",updatetime,use_now);
+        //   timeseries.trim_start("use",view.start*0.001);
+            
+            timeseries.append("battery_charge",updatetime,battery_charge_now);
+        //   timeseries.trim_start("battery_charge",view.start*0.001);
+            timeseries.append("battery_discharge",updatetime,battery_discharge_now);
+        //   timeseries.trim_start("battery_discharge",view.start*0.001);
+            
+            if (config.app.battery_soc.value) {
+                timeseries.append("battery_soc",updatetime,battery_soc_now);
+        //       timeseries.trim_start("battery_soc",view.start*0.001);
             }
-            $(".discharge_time_left").html(battery_time_left_text);
+        
+            // Advance view
+            //view.end = now;
+        //   view.start = now - live_timerange;
+
+            if (now - view.start > 86460 * 1000){
+                var nextmidnight = new Date();
+                nextmidnight.setHours(24,0,0,0);
+                power_end = +nextmidnight;
+                //var power_start = power_end - timeWindow;
+                var midnight = new Date();
+                midnight.setHours(0,0,0,0);
+                power_start = +midnight;
+                timewindow = power_end - power_start;
+
+                live_timerange = timeWindow;
+                view.start = power_start;
+                view.end = power_end;
+                reload = true;
+
+            }
+
+        }
+        // Lower limit for solar & battery charge/discharge
+        if (solar_now<10) solar_now = 0;
+        if (battery_charge_now<10) battery_charge_now = 0;
+        if (battery_discharge_now<10) battery_discharge_now = 0;
+        
+        var balance = solar_now - use_now - battery_charge_now + battery_discharge_now;
+        
+        // convert W to kW
+        if(powerUnit === 'kW') {
+            gen_now = as_kw(solar_now)
+            solar_now = as_kw(solar_now)
+            use_now = as_kw(use_now)
+            balance = as_kw(balance)
+            battery_charge_now = as_kw(battery_charge_now)
+            battery_discharge_now = as_kw(battery_discharge_now)
+            $('.power-unit').text('kW')
+            $('#app-block').addClass('in_kw');
         } else {
+            solar_now = Math.round(solar_now)
+            gen_now = solar_now
+            balance = Math.round(balance)
+            $('.power-unit').text('W')
+            $('#app-block').removeClass('in_kw');
+        }
+
+        if (balance==0) {
+            $(".balance-label").html("NO FLOW");
+            $(".balance").html("--");
+            $(".balance-unit").html("");
+        }
+        
+        if (balance>0) {
+            $(".balance-label").html("EXPORTING");
+            $(".balance").html("<span style='color:#2ed52e'><b>"+Math.round(Math.abs(balance))+"</b></span>");
+            $(".balance-unit").html(powerUnit);
+
+        }
+        
+        if (balance<0) {
+            $(".balance-label").html("IMPORTING");
+            $(".balance").html("<span style='color:#d52e2e'><b>"+Math.round(Math.abs(balance))+"</b></span>");
+            $(".balance-unit").html(powerUnit);
+
+        }
+        
+        $(".generationnow").html(gen_now);
+        $(".usenow").html(use_now);
+        $(".battery_soc").html(battery_soc_now);
+
+        const net_battery_charge = battery_charge_now - battery_discharge_now;
+        if (net_battery_charge>0) {
+            $(".battery_charge_discharge_title").html("<span style='color:#2ed52e;'>CHARGING</span>");
+            $(".battery_charge_discharge").html(net_battery_charge);
+            $(".discharge_time_left").html("--");
+        } else if (net_battery_charge<0) {
+            if (config.app && config.app.kw && config.app.battery_capacity_kwh.value > 0 && battery_soc_now >= 0) {
+                const total_capacity = config.app.battery_capacity_kwh.value * 1000;
+                const energy_remaining = total_capacity * (battery_soc_now) / 100;
+                const total_time_left_mins = (energy_remaining / -(net_battery_charge)) * 60;
+
+                const hours_left = Math.floor(total_time_left_mins / 60);
+                const mins_left = Math.floor(total_time_left_mins % 60);
+                var battery_time_left_text = `${hours_left}h ${mins_left}`;
+                if (hours_left > 9){
+                    battery_time_left_text = `${hours_left}h`;
+                }
+                $(".discharge_time_left").html(battery_time_left_text);
+            } else {
+                $(".discharge_time_left").html("--");
+            }
+
+            $(".battery_charge_discharge_title").html("<span style='color:#d52e2e'>DISCHARGING</span>");
+            $(".battery_charge_discharge").html(-net_battery_charge);
+        } else {
+            $(".battery_charge_discharge_title").html("BATTERY");
+            $(".battery_charge_discharge").html(0);
             $(".discharge_time_left").html("--");
         }
-
-        $(".battery_charge_discharge_title").html("<span style='color:#d52e2e'>DISCHARGING</span>");
-        $(".battery_charge_discharge").html(-net_battery_charge);
-    } else {
-        $(".battery_charge_discharge_title").html("BATTERY");
-        $(".battery_charge_discharge").html(0);
-        $(".discharge_time_left").html("--");
-    }
-    
-    // Only redraw the graph if its the power graph and auto update is turned on
-    if (viewmode=="powergraph" && autoupdate) draw(true);
+        
+        // Only redraw the graph if its the power graph and auto update is turned on
+        if (viewmode=="powergraph" && autoupdate) draw(true);
+    });
 }
 
 function draw(load) {
