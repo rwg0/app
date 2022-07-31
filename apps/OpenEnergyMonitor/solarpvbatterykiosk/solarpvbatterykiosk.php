@@ -31,10 +31,15 @@
     font-size:130%;
 }
 
+
+
+
 .power-unit-style {
     font-size: 33%;
     color: #aaa;
 }
+
+
 
 .statsbox {
     width: 20%;
@@ -226,6 +231,72 @@
     border-width: 10px;
     margin-top: -10px;
   }
+}
+
+
+
+@supports (-moz-appearance:none) {
+
+
+    .statsbox 
+    {
+        border-spacing: 5px;
+    }
+
+    .statstable
+    {
+        border-spacing: 5px;
+    }
+
+    .dispvalue
+    {
+        font-size: 110%;
+    }
+
+    .power-unit-style
+    {
+        font-size:25%;
+    }
+
+    .statsbox-value
+    {
+        font-size: 30px;
+    }
+
+    .statsbox-units
+    {
+        font-size: 14px;
+    }
+
+    .statsbox-prc
+    {
+        font-size:14px;
+    }
+
+    .statsbox-title
+    {
+        font-size:16px;
+        padding-bottom: 10px;
+    }
+
+    h5.text-sm-larger
+    {
+        font-size: 1rem;
+    }
+
+    #placeholder
+    {
+        font-size:80%;
+    }
+
+    [class*="display-"]{
+     line-height: 1.0; 
+    }
+
+    .statsbox-padded
+    {
+        padding: 6px;
+    }
 }
 
 </style>
@@ -610,7 +681,7 @@ function resize()
 
     var is_landscape = $(window).height() < $(window).width();
     var width = placeholder_bound.width();
-    var height = $(window).height()*(is_landscape ? 0.35: 0.45);
+    var height = $(window).height()*(is_landscape ? 0.35: 0.42);
 
     if (height>width) height = width;
     if (height<180) height = 180;
