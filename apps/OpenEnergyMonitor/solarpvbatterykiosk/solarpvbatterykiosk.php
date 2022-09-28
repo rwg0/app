@@ -742,19 +742,21 @@ function livefn()
         //   view.start = now - live_timerange;
 
             if (now - view.start > 86460 * 1000){
-                var nextmidnight = new Date();
-                nextmidnight.setHours(24,0,0,0);
-                power_end = +nextmidnight;
-                //var power_start = power_end - timeWindow;
-                var midnight = new Date();
-                midnight.setHours(0,0,0,0);
-                power_start = +midnight;
-                timewindow = power_end - power_start;
+                location.reload();
+                return;
+                // var nextmidnight = new Date();
+                // nextmidnight.setHours(24,0,0,0);
+                // power_end = +nextmidnight;
+                // //var power_start = power_end - timeWindow;
+                // var midnight = new Date();
+                // midnight.setHours(0,0,0,0);
+                // power_start = +midnight;
+                // timewindow = power_end - power_start;
 
-                live_timerange = timeWindow;
-                view.start = power_start;
-                view.end = power_end;
-                reload = true;
+                // live_timerange = timeWindow;
+                // view.start = power_start;
+                // view.end = power_end;
+                // reload = true;
 
             }
 
