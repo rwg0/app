@@ -547,7 +547,8 @@ config.app = {
 
     // Other options
     "kw":{"type":"checkbox", "default":0, "name": "Show kW", "description": "Display power as kW"},
-    "battery_capacity_kwh":{"type":"value", "default":0, "name":"Battery Capacity", "description":"Battery capacity in kWh"}
+    "battery_capacity_kwh":{"type":"value", "default":0, "name":"Battery Capacity", "description":"Battery capacity in kWh"},
+    "battery_capacity_reserve":{"type":"value", "default":0, "name":"Battery Capacity Reserve (%)", "description":"Minimum percentage the battery will discharge to in normal use"}
 }
 config.name = "<?php echo $name; ?>";
 config.db = <?php echo json_encode($config); ?>;
@@ -817,8 +818,11 @@ function livefn()
             $(".discharge_time_left").html("--");
         } else if (net_battery_charge<0) {
             if (config.app && config.app.kw && config.app.battery_capacity_kwh.value > 0 && battery_soc_now >= 0) {
+                const reserve = config.app.battery_capacity_reserve.value;
                 const total_capacity = config.app.battery_capacity_kwh.value * 1000;
-                const energy_remaining = total_capacity * (battery_soc_now) / 100;
+                const battery_capacity_to_use = battery_soc_now < reserve ? battery_soc_now : battery_soc_now - reserve;
+                
+                const energy_remaining = total_capacity * (battery_capacity_to_use) / 100;
                 const total_time_left_mins = (energy_remaining / -(net_battery_charge)) * 60;
 
                 const hours_left = Math.floor(total_time_left_mins / 60);
