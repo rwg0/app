@@ -353,7 +353,7 @@
 <td>
         <div class="text-xs-center">
             <h5 class="electric-title mb-0 text-sm-larger text-md-larger text-light"><?php echo _('CHARGE') ?></h5>
-            <h2 class="power-value display-sm-4 display-md-3 display-lg-2 my-0 text-quaternary"><span class="battery_soc dispvalue">-</span><span class="power-unit-style">%</span></h2>
+            <h2 class="power-value display-sm-4 display-md-3 display-lg-2 my-0 text-quaternary"><span class="battery_soc dispvalue">-</span><span class="power-unit-style">kWh</span></h2>
         </div>
 </td>
 </tr>
@@ -548,7 +548,9 @@ config.app = {
     // Other options
     "kw":{"type":"checkbox", "default":0, "name": "Show kW", "description": "Display power as kW"},
     "battery_capacity_kwh":{"type":"value", "default":0, "name":"Battery Capacity", "description":"Battery capacity in kWh"},
-    "battery_capacity_reserve":{"type":"value", "default":0, "name":"Battery Capacity Reserve (%)", "description":"Minimum percentage the battery will discharge to in normal use"}
+    "battery_capacity_reserve":{"type":"value", "default":0, "name":"Battery Capacity Reserve (%)", "description":"Minimum percentage the battery will discharge to in normal use"},
+    "battery_capacity_floor":{"type":"value", "default":0, "name":"Battery Capacity Floor (%)", "description":"Minimum percentage the battery will discharge to in EPS mode"},
+    "parasitic_power_use":{"type":"value", "default":0, "name":"Inverter Parasitic Power (W)", "description":"Power loss in the inverter during discharge. Often in the range 30 to 100W"}
 }
 config.name = "<?php echo $name; ?>";
 config.db = <?php echo json_encode($config); ?>;
@@ -809,7 +811,17 @@ function livefn()
         
         $(".generationnow").html(gen_now);
         $(".usenow").html(use_now);
-        $(".battery_soc").html(battery_soc_now);
+
+        const reserve = config.app.battery_capacity_reserve.value;
+        const batfloor = config.app.battery_capacity_floor.value;
+        if (battery_soc_now >= reserve || battery_discharge_now <= 0)
+        {
+            $(".battery_soc").html(((battery_soc_now - reserve)*config.app.battery_capacity_kwh.value / 100).toFixed(1));
+        }
+        else {
+            $(".battery_soc").html("R"+((battery_soc_now - batfloor)*config.app.battery_capacity_kwh.value / 100).toFixed(1));
+
+        }
 
         const net_battery_charge = battery_charge_now - battery_discharge_now;
         if (net_battery_charge>0) {
@@ -818,12 +830,13 @@ function livefn()
             $(".discharge_time_left").html("--");
         } else if (net_battery_charge<0) {
             if (config.app && config.app.kw && config.app.battery_capacity_kwh.value > 0 && battery_soc_now >= 0) {
-                const reserve = config.app.battery_capacity_reserve.value;
                 const total_capacity = config.app.battery_capacity_kwh.value * 1000;
-                const battery_capacity_to_use = battery_soc_now < reserve ? battery_soc_now : battery_soc_now - reserve;
+                const battery_capacity_to_use = battery_soc_now < reserve ? battery_soc_now - batfloor : battery_soc_now - reserve;
                 
                 const energy_remaining = total_capacity * (battery_capacity_to_use) / 100;
-                const total_time_left_mins = (energy_remaining / -(net_battery_charge)) * 60;
+                const parasitic_power = config.app.parasitic_power_use.value;
+                const discharge_rate_now = parasitic_power - net_battery_charge;
+                const total_time_left_mins = (energy_remaining / discharge_rate_now) * 60;
 
                 const hours_left = Math.floor(total_time_left_mins / 60);
                 const mins_left = Math.floor(total_time_left_mins % 60);
