@@ -235,7 +235,7 @@
 
 
 
-@supports (-moz-appearance:none) {
+/* @supports (-moz-appearance:none) {
 
 
     .statsbox 
@@ -297,7 +297,7 @@
     {
         padding: 6px;
     }
-}
+} */
 
 </style>
 
