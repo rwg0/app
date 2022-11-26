@@ -719,7 +719,7 @@ function livefn()
         
         var battery_soc_now = "---";
         if (config.app.battery_soc.value) {
-            battery_soc_now = parseInt(feeds[config.app.battery_soc.value].value);
+            battery_soc_now = parseFloat(feeds[config.app.battery_soc.value].value);
         }
         
         if (autoupdate) {
@@ -816,10 +816,10 @@ function livefn()
         const batfloor = config.app.battery_capacity_floor.value;
         if (battery_soc_now >= reserve || battery_discharge_now <= 0)
         {
-            $(".battery_soc").html(((battery_soc_now - reserve)*config.app.battery_capacity_kwh.value / 100).toFixed(1));
+            $(".battery_soc").html(((battery_soc_now - reserve)*config.app.battery_capacity_kwh.value / 100).toFixed(2));
         }
         else {
-            $(".battery_soc").html("R"+((battery_soc_now - batfloor)*config.app.battery_capacity_kwh.value / 100).toFixed(1));
+            $(".battery_soc").html("R"+((battery_soc_now - batfloor)*config.app.battery_capacity_kwh.value / 100).toFixed(2));
 
         }
 
