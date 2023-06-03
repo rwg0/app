@@ -352,7 +352,7 @@
 </td>
 <td>
         <div class="text-xs-center">
-            <h5 class="electric-title mb-0 text-sm-larger text-md-larger text-light"><?php echo _('CHARGE') ?></h5>
+            <h5 class="electric-title mb-0 text-sm-larger text-md-larger text-light"><span class="battery_soc_title"><?php echo _('CHARGE') ?></span></h5>
             <h2 class="power-value display-sm-4 display-md-3 display-lg-2 my-0 text-quaternary"><span class="battery_soc dispvalue">-</span><span class="power-unit-style">kWh</span></h2>
         </div>
 </td>
@@ -535,7 +535,8 @@ config.app = {
     // Battery feeds
     "battery_charge":{"type":"feed", "autoname":"battery_charge", "engine":"5", "description":"Battery charge power in watts"},
     "battery_discharge":{"type":"feed", "autoname":"battery_discharge", "engine":"5", "description":"Battery discharge power in watts"},
-    "battery_soc":{"optional":true, "type":"feed", "autoname":"battery_soc", "engine":"5", "description":"Battery state of charge %"},
+    "battery_soc":{"type":"feed", "autoname":"battery_soc", "engine":"5", "description":"Battery state of charge %"},
+    "battery_reserve_soc":{"type":"feed", "autoname":"battery_reserve_soc", "engine":"5", "description":"Battery reserve charge level %"},
 
     // History feeds
     "use_kwh":{"optional":true, "type":"feed", "autoname":"use_kwh", "engine":5, "description":"Building consumption in kWh (not including battery charging)"},
@@ -548,7 +549,7 @@ config.app = {
     // Other options
     "kw":{"type":"checkbox", "default":0, "name": "Show kW", "description": "Display power as kW"},
     "battery_capacity_kwh":{"type":"value", "default":0, "name":"Battery Capacity", "description":"Battery capacity in kWh"},
-    "battery_capacity_reserve":{"type":"value", "default":0, "name":"Battery Capacity Reserve (%)", "description":"Minimum percentage the battery will discharge to in normal use"},
+//    "battery_capacity_reserve":{"type":"value", "default":0, "name":"Battery Capacity Reserve (%)", "description":"Minimum percentage the battery will discharge to in normal use"},
     "battery_capacity_floor":{"type":"value", "default":0, "name":"Battery Capacity Floor (%)", "description":"Minimum percentage the battery will discharge to in EPS mode"},
     "parasitic_power_use":{"type":"value", "default":0, "name":"Inverter Parasitic Power (W)", "description":"Power loss in the inverter during discharge. Often in the range 30 to 100W"}
 }
@@ -721,6 +722,11 @@ function livefn()
         if (config.app.battery_soc.value) {
             battery_soc_now = parseFloat(feeds[config.app.battery_soc.value].value);
         }
+
+        var battery_reserve_soc_now = "---";
+        if (config.app.battery_reserve_soc.value) {
+            battery_reserve_soc_now = parseFloat(feeds[config.app.battery_reserve_soc.value].value);
+        }
         
         if (autoupdate) {
             
@@ -737,6 +743,10 @@ function livefn()
             
             if (config.app.battery_soc.value) {
                 timeseries.append("battery_soc",updatetime,battery_soc_now);
+        //       timeseries.trim_start("battery_soc",view.start*0.001);
+            }
+            if (config.app.battery_reserve_soc.value) {
+                timeseries.append("battery_reserve_soc",updatetime,battery_reserve_soc_now);
         //       timeseries.trim_start("battery_soc",view.start*0.001);
             }
         
@@ -812,14 +822,16 @@ function livefn()
         $(".generationnow").html(gen_now);
         $(".usenow").html(use_now);
 
-        const reserve = config.app.battery_capacity_reserve.value;
+        const reserve = battery_reserve_soc_now;
         const batfloor = config.app.battery_capacity_floor.value;
         if (battery_soc_now >= reserve || battery_discharge_now <= 0)
         {
             $(".battery_soc").html(((battery_soc_now - reserve)*config.app.battery_capacity_kwh.value / 100).toFixed(2));
+            $(".battery_soc_title").html("CHARGE");
         }
         else {
-            $(".battery_soc").html("R"+((battery_soc_now - batfloor)*config.app.battery_capacity_kwh.value / 100).toFixed(2));
+            $(".battery_soc").html(((battery_soc_now - batfloor)*config.app.battery_capacity_kwh.value / 100).toFixed(2));
+            $(".battery_soc_title").html("RESERVE");
 
         }
 
@@ -890,6 +902,10 @@ function load_powergraph() {
         if (config.app.battery_soc.value) {
             timeseries.load("battery_soc",feed.getdata(config.app.battery_soc.value,view.start,endt,view.interval));
         }
+        if (config.app.battery_reserve_soc.value)
+        {
+            timeseries.load("battery_reserve_soc",feed.getdata(config.app.battery_reserve_soc.value,view.start,endt,view.interval));
+        }
     }
     // -------------------------------------------------------------------------------------------------------
     
@@ -906,6 +922,7 @@ function load_powergraph() {
     var battery_charge_now = 0;
     var battery_discharge_now = 0;
     var battery_soc_now = 0;
+    var battery_reserve_soc_now = 0;
     
     var total_solar_kwh = 0;
     var total_use_kwh = 0;
@@ -951,7 +968,10 @@ function load_powergraph() {
             battery_soc_now = timeseries.value("battery_soc",z);
             last_soc = time;
         }
-                
+        if (config.app.battery_reserve_soc.value && timeseries.value("battery_reserve_soc",z)!=null) {
+            battery_rserve_soc_now = timeseries.value("battery_reserve_soc",z);
+        }
+        
         if ((time-last_solar)<timeout && (time-last_use)<timeout && (time-last_charge)<timeout && (time-last_discharge)<timeout) {
             
             // -------------------------------------------------------------------------------------------------------
