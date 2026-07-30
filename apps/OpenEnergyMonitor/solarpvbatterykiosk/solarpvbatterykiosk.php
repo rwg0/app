@@ -827,11 +827,11 @@ function livefn()
         if (battery_soc_now >= reserve || battery_discharge_now <= 0)
         {
             $(".battery_soc").html(((battery_soc_now - reserve)*config.app.battery_capacity_kwh.value / 100).toFixed(2));
-            $(".battery_soc_title").html("CHARGE");
+            $(".battery_soc_title").html("CHARGE kWh");
         }
         else {
             $(".battery_soc").html(((battery_soc_now - batfloor)*config.app.battery_capacity_kwh.value / 100).toFixed(2));
-            $(".battery_soc_title").html("RESERVE");
+            $(".battery_soc_title").html("RESERVE kWh");
 
         }
 
