@@ -352,7 +352,7 @@
 </td>
 <td>
         <div class="text-xs-center">
-            <h5 class="electric-title mb-0 text-sm-larger text-md-larger text-light"><span class="battery_soc_title"><?php echo _('CHARGE kWh') ?></span></h5>
+            <h5 class="electric-title mb-0 text-sm-larger text-md-larger text-light"><span class="battery_soc_title">CHARGE (kWh)</span></h5>
             <h2 class="power-value display-sm-4 display-md-3 display-lg-2 my-0 text-quaternary"><span class="battery_soc dispvalue">-</span><span class="power-unit-style"></span></h2>
         </div>
 </td>
